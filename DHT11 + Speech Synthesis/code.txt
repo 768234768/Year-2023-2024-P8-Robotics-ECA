@@ -1,0 +1,56 @@
+#include <DFRobot_ASR.h>
+#include <DFRobot_SpeechSynthesis_V2.h>
+#include <Adafruit_Sensor.h>
+#include <Adafruit_Sensor.h>
+#include <Adafruit_Sensor.h>
+#include <SoftwareSerial.h>
+SoftwareSerial x3Driver(7,8);
+#include <DFRobot_SpeechSynthesis_V2.h>
+DFRobot_SpeechSynthesis_I2C ss;
+#include <dht11.h>
+dht11 DHT;
+#define DHT11_PIN 4
+
+void setup(){
+      Serial.begin(9600);
+      Serial.println("DHT TEST PROGRAM ");
+      Serial.print("LIBRARY VERSION: ");
+      Serial.println(DHT11LIB_VERSION);
+      Serial.println();
+      Serial.println("Type,\tstatus,\tHumidity (%),\tTemperature (C)");
+ ss.begin();
+ ss.setVolume(3);
+      Serial.println("Start-1");
+    }
+
+    void loop(){
+      int chk;
+      Serial.print("DHT11, \t");
+      chk = DHT.read(DHT11_PIN);    // READ DATA
+//      String h = String (chk);
+      switch (chk){
+        case DHTLIB_OK:
+                    Serial.print("OK,\t");
+                    break;
+        case DHTLIB_ERROR_CHECKSUM:
+                    Serial.print("Checksum error,\t");
+                    break;
+        case DHTLIB_ERROR_TIMEOUT:
+                    Serial.print("Time out error,\t");
+                    break;
+        default:
+                    Serial.print("Unknown error,\t");
+                    break;
+  }
+     // DISPLAY DATA
+      Serial.print(DHT.humidity,1);
+      String h = String (DHT.humidity,1);
+      Serial.print(",\t");
+      Serial.println(DHT.temperature,1);
+      String hu = String(DHT.temperature,1);
+      ss.speak(F("今天的湿度是")); 
+      ss.speak(h);
+      ss.speak(F("今天的温度是"));
+      ss.speak(hu);
+      delay(10000);
+    }
